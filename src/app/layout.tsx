@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://ai-career-coach-tfc6.vercel.app'),
   title: "AI Career Coach — Land the job you actually want",
   description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
+  verification: {
+    google: 'vMgYRKhwd_aJs_dtRyLhlj_mt-okFWmhdqM46yduoEw',
+  },
   openGraph: {
     title: "AI Career Coach — Land the job you actually want",
     description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
