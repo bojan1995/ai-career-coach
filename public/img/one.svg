@@ -1,0 +1,8 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#F8F7F4"/>
+  <rect x="40" y="40" width="720" height="420" rx="12" fill="white" stroke="rgba(15,23,42,0.1)" stroke-width="1"/>
+  <rect x="60" y="60" width="340" height="180" rx="8" fill="#F8F7F4"/>
+  <rect x="420" y="60" width="340" height="180" rx="8" fill="#F8F7F4"/>
+  <rect x="60" y="260" width="700" height="40" rx="6" fill="#0D9488"/>
+  <text x="400" y="285" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="600">Generate Advice</text>
+</svg>
