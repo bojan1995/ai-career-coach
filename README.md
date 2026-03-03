@@ -18,8 +18,8 @@ Most job seekers send the same generic application to every job. AI Career Coach
 All streamed in real time — no waiting, no loading spinners.
 
 Screenshots
-<img width="1920" height="1932" alt="1" src="https://github.com/user-attachments/assets/ba991aec-692c-426a-9f88-6f77b8c57ded" />
 <img width="1920" height="1072" alt="2" src="https://github.com/user-attachments/assets/00c603c1-009e-490b-863e-9024fad5996c" />
+<img width="1920" height="1932" alt="1" src="https://github.com/user-attachments/assets/ba991aec-692c-426a-9f88-6f77b8c57ded" />
 <img width="1920" height="1155" alt="3" src="https://github.com/user-attachments/assets/364dc05d-5f0e-4a1d-bfb7-a3e7f437e4b0" />
 
 
