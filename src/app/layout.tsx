@@ -16,6 +16,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://ai-career-coach.vercel.app'),
   title: "AI Career Coach — Land the job you actually want",
   description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
   openGraph: {
@@ -24,11 +25,23 @@ export const metadata: Metadata = {
     url: "https://ai-career-coach.vercel.app",
     siteName: "AI Career Coach",
     type: "website",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI Career Coach',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Career Coach — Land the job you actually want",
     description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
+    images: ['/og-image.png'],
+  },
+  alternates: {
+    canonical: 'https://ai-career-coach.vercel.app',
   },
 };
 
@@ -39,6 +52,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "AI Career Coach",
+              "url": "https://ai-career-coach.vercel.app",
+              "description": "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
+              "publisher": {
+                "@type": "Organization",
+                "name": "AI Career Coach",
+                "url": "https://ai-career-coach.vercel.app"
+              }
+            })
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${jakarta.variable} font-sans`}>
         {children}
         <Footer />
