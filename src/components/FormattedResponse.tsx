@@ -66,7 +66,7 @@ export function FormattedResponse({ text }: FormattedResponseProps) {
 
         if (title.toLowerCase().includes('fit score')) {
           const scoreMatch = content.match(/\*\*Score:\*\*\s*(\d+)\/10/);
-          const reasoningMatch = content.match(/\*\*Reasoning:\*\*\s*(.+)/s);
+          const reasoningMatch = content.match(/\*\*Reasoning:\*\*\s*([\s\S]+)/);
           const score = scoreMatch ? scoreMatch[1] : '0';
           const reasoning = reasoningMatch ? reasoningMatch[1].trim() : '';
 
