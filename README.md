@@ -52,18 +52,19 @@ bash# Push to GitHub, then:
 # 3. Deploy — no other config needed
 
 Project structure
-src/
-├── app/
-│   ├── page.tsx          # Landing page
-│   ├── coach/
-│   │   └── page.tsx      # Main coach interface
-│   ├── how-it-works/
-│   │   └── page.tsx      # How it works page
-│   └── api/
-│       └── coach/
-│           └── route.ts  # Groq streaming API route
-├── components/           # UI components
-└── lib/                  # Utilities
+ai-career-coach/
+├── 📁 src/
+│   ├── 📁 app/                          # Next.js App Router
+│   │   ├── 📄 page.tsx                  # Landing page (/)
+│   │   ├── 📄 layout.tsx                # Root layout
+│   │   ├── 📁 coach/
+│   │   │   └── 📄 page.tsx              # Coach interface (/coach)
+│   │   ├── 📁 how-it-works/
+│   │   │   └── 📄 page.tsx              # How it works (/how-it-works)
+│   │   └── 📁 api/
+│   │       └── 📁 coach/
+│   │           └── 📄 route.ts          # POST /api/coach → Groq stream
+
 
 How the streaming works
 typescript// Server sends a ReadableStream directly from Groq
