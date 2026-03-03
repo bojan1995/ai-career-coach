@@ -16,13 +16,13 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ai-career-coach.vercel.app'),
+  metadataBase: new URL('https://ai-career-coach-tfc6.vercel.app'),
   title: "AI Career Coach — Land the job you actually want",
   description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
   openGraph: {
     title: "AI Career Coach — Land the job you actually want",
     description: "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
-    url: "https://ai-career-coach.vercel.app",
+    url: "https://ai-career-coach-tfc6.vercel.app",
     siteName: "AI Career Coach",
     type: "website",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://ai-career-coach.vercel.app',
+    canonical: 'https://ai-career-coach-tfc6.vercel.app',
   },
 };
 
@@ -61,12 +61,12 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 "name": "AI Career Coach",
-                "url": "https://ai-career-coach.vercel.app",
+                "url": "https://ai-career-coach-tfc6.vercel.app",
                 "description": "Paste your resume + job description. Get cover letter bullets, interview prep, and a fit score in seconds.",
                 "publisher": {
                   "@type": "Organization",
                   "name": "AI Career Coach",
-                  "url": "https://ai-career-coach.vercel.app"
+                  "url": "https://ai-career-coach-tfc6.vercel.app"
                 }
               },
               {
@@ -86,8 +86,8 @@ export default function RootLayout({
                   "ratingCount": "127"
                 },
                 "description": "AI-powered career coaching tool that generates personalized cover letter bullets, interview questions, and fit scores based on your resume and target job description.",
-                "url": "https://ai-career-coach.vercel.app",
-                "screenshot": "https://ai-career-coach.vercel.app/og-image.png",
+                "url": "https://ai-career-coach-tfc6.vercel.app",
+                "screenshot": "https://ai-career-coach-tfc6.vercel.app/og-image.png",
                 "featureList": [
                   "AI-powered cover letter generation",
                   "Interview question preparation",
