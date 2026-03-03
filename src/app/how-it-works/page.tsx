@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 import { Navbar } from "@/components";
 
 export default function HowItWorksPage() {
@@ -16,9 +15,9 @@ export default function HowItWorksPage() {
           Get personalized career advice in three simple steps.
         </p>
 
-        <div className="flex flex-col gap-12 md:gap-16">
+        <section className="flex flex-col gap-12 md:gap-16">
           {/* Step 1 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <div className="order-2 md:order-1">
               <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-xl font-semibold" style={{ background: 'rgba(13,148,136,0.1)', color: 'var(--accent)' }}>
                 1
@@ -30,22 +29,24 @@ export default function HowItWorksPage() {
                 Add your skills, experience, and the job description you're targeting. Our AI analyzes both to understand the perfect match.
               </p>
             </div>
-            <div className="order-1 md:order-2 bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 md:p-6 aspect-video flex items-center justify-center">
-              <img 
+            <div className="order-1 md:order-2 bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 md:p-6 aspect-video flex items-center justify-center relative overflow-hidden">
+              <Image 
                 src="/img/one.svg" 
-                alt="Step 1: Paste your information"
-                className="w-full h-full object-cover rounded-lg"
+                alt="Step 1: Paste your resume and job description into the AI Career Coach interface"
+                fill
+                className="object-cover rounded-lg"
               />
             </div>
-          </div>
+          </article>
 
           {/* Step 2 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
-            <div className="order-1 bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 md:p-6 aspect-video flex items-center justify-center">
-              <img 
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+            <div className="order-1 bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 md:p-6 aspect-video flex items-center justify-center relative overflow-hidden">
+              <Image 
                 src="/img/two.svg" 
-                alt="Step 2: Get instant results"
-                className="w-full h-full object-cover rounded-lg"
+                alt="Step 2: AI generates tailored cover letter bullets, interview questions, and fit score"
+                fill
+                className="object-cover rounded-lg"
               />
             </div>
             <div className="order-2">
@@ -59,10 +60,10 @@ export default function HowItWorksPage() {
                 Receive tailored cover letter bullets, interview questions with answers, and a fit score — all in seconds.
               </p>
             </div>
-          </div>
+          </article>
 
           {/* Step 3 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <div className="order-2 md:order-1">
               <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-xl font-semibold" style={{ background: 'rgba(13,148,136,0.1)', color: 'var(--accent)' }}>
                 3
@@ -87,10 +88,10 @@ export default function HowItWorksPage() {
                 <path d="M100 165 L100 180 M90 175 L100 180 L110 175" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-          </div>
-        </div>
+          </article>
+        </section>
 
-        <div className="mt-16 md:mt-20 p-8 md:p-12 bg-white rounded-2xl border border-[var(--border)] shadow-sm text-center">
+        <section className="mt-16 md:mt-20 p-8 md:p-12 bg-white rounded-2xl border border-[var(--border)] shadow-sm text-center">
           <h2 className="text-2xl md:text-3xl font-semibold mb-3 md:mb-4" style={{ letterSpacing: '-0.02em', color: 'var(--text-1)' }}>
             Ready to get started?
           </h2>
@@ -105,18 +106,10 @@ export default function HowItWorksPage() {
               color: 'white',
               boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--accent-hover)';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(13,148,136,0.25)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--accent)';
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-            }}
           >
             Start Coaching — it's free
           </Link>
-        </div>
+        </section>
       </main>
     </div>
   );
