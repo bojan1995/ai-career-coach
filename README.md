@@ -51,20 +51,6 @@ bash# Push to GitHub, then:
 # 2. Add environment variable: GROQ_API_KEY
 # 3. Deploy — no other config needed
 
-Project structure
-ai-career-coach/
-├── 📁 src/
-│   ├── 📁 app/                          # Next.js App Router
-│   │   ├── 📄 page.tsx                  # Landing page (/)
-│   │   ├── 📄 layout.tsx                # Root layout
-│   │   ├── 📁 coach/
-│   │   │   └── 📄 page.tsx              # Coach interface (/coach)
-│   │   ├── 📁 how-it-works/
-│   │   │   └── 📄 page.tsx              # How it works (/how-it-works)
-│   │   └── 📁 api/
-│   │       └── 📁 coach/
-│   │           └── 📄 route.ts          # POST /api/coach → Groq stream
-
 
 How the streaming works
 typescript// Server sends a ReadableStream directly from Groq
