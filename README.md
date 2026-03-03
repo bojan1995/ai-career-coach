@@ -63,7 +63,7 @@ System prompt: *“You are a top 1% tech hiring strategist and career coach. Be 
 
 ## Built with
 
-**bolt.new** + **Cursor** + **Groq**
+System Thinking + (AI Help)
 
 ---
 
