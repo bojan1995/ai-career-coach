@@ -11,7 +11,7 @@
 ## Tech stack
 
 - **Framework:** Next.js 15 (App Router) + TypeScript
-- **Styling:** Tailwind CSS + shadcn/ui-style components (dark mode)
+- **Styling:** Tailwind CSS + shadcn/ui-style components (custom design)
 - **LLM:** [Groq](https://console.groq.com) — `llama3-70b-8192` or `mixtral-8x7b-32768`
 - **Streaming:** Native `ReadableStream` from Groq SDK (no DB, no persistent storage)
 - **Deploy:** Vercel (zero config)
