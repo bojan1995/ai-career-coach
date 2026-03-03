@@ -2,7 +2,10 @@
 
 **Get tailored job prep instantly.** Paste your skills or resume and a job description; get three cover letter bullets, five predicted interview questions with sample answers, and a 1–10 fit score — streamed in real time.
 
-![AI Career Coach — Get Tailored Job Prep Instantly](https://via.placeholder.com/1200x630/0f172a/38bdf8?text=AI+Career+Coach)
+![AI Career Coach — Get Tailored Job Prep Instantly])
+<img width="1844" height="799" alt="one" src="https://github.com/user-attachments/assets/de9b4a52-62a7-404b-a1a0-047035158a30" />
+<img width="1620" height="839" alt="two" src="https://github.com/user-attachments/assets/0c3b639e-0fb7-4aef-a006-c88b20a33c6a" />
+
 
 ## Tech stack
 
