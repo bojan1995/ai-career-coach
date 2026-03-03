@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { Navbar } from "@/components";
 
 function NeuralCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -93,40 +94,11 @@ export default function LandingPage() {
     <>
       <NeuralCanvas />
       
-      <div className="min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
-        <nav className="sticky top-0 z-50 h-[60px] backdrop-blur-md" style={{ 
-          background: 'rgba(248,247,244,0.85)', 
-          borderBottom: '1px solid var(--border)' 
-        }}>
-          <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-            <span className="font-semibold text-[15px]" style={{ color: 'var(--text-1)' }}>CareerCoach</span>
-            <div className="flex items-center gap-6">
-              <Link href="/how-it-works" className="text-sm" style={{ color: 'var(--text-2)' }}>How it works</Link>
-              <Link 
-                href="/coach"
-                className="h-9 px-4 rounded-xl text-sm font-medium flex items-center transition-all duration-180 hover:-translate-y-[1px]"
-                style={{ 
-                  background: 'var(--accent)', 
-                  color: 'white',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--accent-hover)';
-                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(13,148,136,0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--accent)';
-                  e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-                }}
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </nav>
+      <div className="min-h-screen relative z-[1]">
+        <Navbar />
 
-        <main className="max-w-[680px] mx-auto px-6 py-32 text-center">
-          <div className="space-y-6">
+        <main className="max-w-[680px] mx-auto px-4 md:px-6 py-16 md:py-32 text-center">
+          <div className="space-y-4 md:space-y-6">
             <div className="animate-fade-up opacity-0">
               <span 
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
@@ -142,9 +114,8 @@ export default function LandingPage() {
             </div>
 
             <h1 
-              className="animate-fade-up opacity-0 delay-80"
+              className="animate-fade-up opacity-0 delay-80 text-3xl md:text-5xl lg:text-[52px] font-semibold leading-tight"
               style={{ 
-                fontSize: '52px', 
                 fontWeight: 600, 
                 letterSpacing: '-0.03em',
                 lineHeight: '1.1',
@@ -155,7 +126,7 @@ export default function LandingPage() {
             </h1>
 
             <p 
-              className="animate-fade-up opacity-0 delay-160 max-w-[480px] mx-auto text-sm leading-relaxed"
+              className="animate-fade-up opacity-0 delay-160 max-w-[480px] mx-auto text-sm md:text-base leading-relaxed"
               style={{ 
                 color: 'var(--text-2)'
               }}
@@ -166,7 +137,7 @@ export default function LandingPage() {
             <div className="animate-fade-up opacity-0 delay-240 pt-2">
               <Link
                 href="/coach"
-                className="inline-flex items-center gap-2 h-11 px-5 rounded-xl font-medium text-sm transition-all duration-180 hover:-translate-y-[1px]"
+                className="inline-flex items-center gap-2 h-11 px-5 rounded-xl font-medium text-sm w-full sm:w-auto justify-center transition-all duration-180 hover:-translate-y-[1px]"
                 style={{ 
                   background: 'var(--accent)', 
                   color: 'white',
@@ -186,15 +157,15 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <p className="animate-fade-up opacity-0 delay-320 text-xs pt-3 uppercase tracking-wide" style={{ color: 'var(--text-3)' }}>
-              Trusted by 2,400+ job seekers this month
+            <p className="animate-fade-up opacity-0 delay-320 text-xs pt-3" style={{ color: 'var(--text-3)' }}>
+              Built for developers and job seekers
             </p>
 
-            <div className="animate-fade-up opacity-0 delay-320 flex items-center justify-center gap-3 pt-8 flex-wrap">
+            <div className="animate-fade-up opacity-0 delay-320 flex items-center justify-center gap-2 md:gap-3 pt-8 flex-wrap">
               {['Cover Letter Bullets', 'Interview Q&A', 'Fit Score'].map((feature) => (
                 <span
                   key={feature}
-                  className="px-4 py-2 rounded-full text-sm"
+                  className="px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm"
                   style={{
                     background: 'var(--surface)',
                     border: '1px solid var(--border)',

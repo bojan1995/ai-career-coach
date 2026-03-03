@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
-import { Sparkles, ArrowLeft, Loader2, X, Copy, Check } from "lucide-react";
+import { Sparkles, Loader2, X, Copy, Check } from "lucide-react";
+import { Navbar } from "@/components";
 
 interface ParsedAdvice {
   coverLetterBullets: string[];
@@ -142,6 +142,9 @@ export default function CoachPage() {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [copiedBullet, setCopiedBullet] = useState<number | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -157,6 +160,7 @@ export default function CoachPage() {
       setResult("");
       setIsLoading(true);
       setShowModal(true);
+      setHasError(false);
 
       try {
         const res = await fetch("/api/advice", {
@@ -166,8 +170,8 @@ export default function CoachPage() {
         });
 
         if (!res.ok) {
-          const data = await res.json().catch(() => ({ error: `Failed: ${res.status}` }));
-          setError(data.error);
+          setHasError(true);
+          setIsLoading(false);
           return;
         }
 
@@ -175,7 +179,8 @@ export default function CoachPage() {
         const decoder = new TextDecoder();
 
         if (!reader) {
-          setError("No response");
+          setHasError(true);
+          setIsLoading(false);
           return;
         }
 
@@ -187,7 +192,7 @@ export default function CoachPage() {
           setResult(text);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error");
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -198,12 +203,28 @@ export default function CoachPage() {
   const copyToClipboard = async (text: string, index: number) => {
     await navigator.clipboard.writeText(text);
     setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
+    setShowToast(true);
+    setTimeout(() => {
+      setCopiedIndex(null);
+      setShowToast(false);
+    }, 2000);
+  };
+
+  const copyBullet = async (text: string, index: number) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedBullet(index);
+    setTimeout(() => setCopiedBullet(null), 1500);
+  };
+
+  const resetForm = () => {
+    setShowModal(false);
+    setHasError(false);
+    setResult("");
+    setError(null);
   };
 
   const parsed = result ? parseAdvice(result) : null;
-  const displayedQA = parsed ? parsed.interviewQA.slice(0, questionCount > 5 ? 5 : questionCount) : [];
-  const hasMoreQuestions = parsed && parsed.interviewQA.length > 5 && questionCount > 5;
+  const displayedQA = parsed ? parsed.interviewQA.slice(0, questionCount) : [];
 
   return (
     <>
@@ -233,233 +254,111 @@ export default function CoachPage() {
           --radius-xl: 20px;
           --radius-pill: 999px;
         }
-        .t-title { font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; color: var(--text-1); }
-        .t-body { font-size: 15px; font-weight: 400; line-height: 1.75; color: var(--text-2); }
-        .t-small { font-size: 13px; font-weight: 400; line-height: 1.6; color: var(--text-2); }
-        .t-label { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-3); }
-        .t-caption { font-size: 12px; font-weight: 400; color: var(--text-3); }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
+        .t-title { font-size: 24px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; color: var(--text-1); font-family: var(--font-inter), system-ui, sans-serif; }
+        @media (min-width: 768px) {
+          .t-title { font-size: 30px; }
         }
-        .fade-up { animation: fadeUp 450ms cubic-bezier(0.22,1,0.36,1) forwards; opacity: 0; }
-        .delay-0 { animation-delay: 0ms; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
+        .t-body { font-size: 14px; font-weight: 400; line-height: 1.75; color: var(--text-2); font-family: var(--font-inter), system-ui, sans-serif; }
+        @media (min-width: 768px) {
+          .t-body { font-size: 15px; }
+        }
+        .t-small { font-size: 13px; font-weight: 400; line-height: 1.6; color: var(--text-2); font-family: var(--font-inter), system-ui, sans-serif; }
+        .t-label { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-3); font-family: var(--font-inter), system-ui, sans-serif; }
+        .t-caption { font-size: 12px; font-weight: 400; color: var(--text-3); font-family: var(--font-inter), system-ui, sans-serif; }
       `}</style>
 
-      <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh' }}>
-        <nav style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
-          height: '60px',
-          background: 'rgba(248,247,244,0.80)',
-          backdropFilter: 'blur(16px) saturate(180%)',
-          borderBottom: '1px solid var(--border)'
-        }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontWeight: 600, fontSize: '15px', color: 'var(--text-1)' }}>CareerCoach</span>
-          </div>
-        </nav>
+      <div className="relative z-[1] min-h-screen">
+        <Navbar />
 
-        <main style={{ maxWidth: '900px', margin: '0 auto', padding: '80px 24px' }}>
-          <Link href="/" className="t-caption" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginBottom: '32px', transition: 'color 180ms' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-1)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-3)'}>
-            <ArrowLeft style={{ width: '14px', height: '14px' }} />
-            Back
-          </Link>
-
-          <div style={{ marginBottom: '48px' }}>
-            <h1 className="t-title" style={{ marginBottom: '8px' }}>Get Tailored Advice</h1>
+        <main className="max-w-[900px] mx-auto px-4 md:px-8 py-12 md:py-20">
+          <div className="mb-8 md:mb-12">
+            <h1 className="t-title mb-2">Get Tailored Advice</h1>
             <p className="t-body">Your background + any job post → cover letter, interview prep, fit score.</p>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{
-              background: 'var(--surface)',
-              borderRadius: 'var(--radius-xl)',
-              border: '1px solid var(--border)',
-              boxShadow: 'var(--shadow-sm)',
-              padding: '28px',
-              transition: 'box-shadow 200ms'
-            }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 md:gap-5">
+            <div className="bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 md:p-7">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                 <div>
-                  <label className="t-label" style={{ display: 'block', marginBottom: '10px' }}>Your Background</label>
+                  <label className="t-label block mb-2.5">Your Background</label>
                   <textarea
                     value={profile}
                     onChange={(e) => setProfile(e.target.value)}
                     placeholder="Skills, experience, what you're looking for..."
                     disabled={isLoading}
-                    style={{
-                      width: '100%',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius-lg)',
-                      padding: '14px 16px',
-                      fontSize: '14px',
-                      lineHeight: '1.75',
-                      color: 'var(--text-1)',
-                      resize: 'vertical',
-                      minHeight: '180px',
-                      transition: 'border-color 180ms, box-shadow 180ms',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = 'var(--border-focus)';
-                      e.target.style.boxShadow = 'var(--shadow-glow)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'var(--border)';
-                      e.target.style.boxShadow = 'none';
-                    }}
+                    className="w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm leading-relaxed text-[var(--text-1)] resize-vertical min-h-[120px] md:min-h-[180px] transition-all outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--accent-subtle)]"
                   />
                 </div>
 
                 <div>
-                  <label className="t-label" style={{ display: 'block', marginBottom: '10px' }}>Job Description</label>
+                  <label className="t-label block mb-2.5">Job Description</label>
                   <textarea
                     value={jobDesc}
                     onChange={(e) => setJobDesc(e.target.value)}
                     placeholder="Paste the full job posting..."
                     disabled={isLoading}
-                    style={{
-                      width: '100%',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius-lg)',
-                      padding: '14px 16px',
-                      fontSize: '14px',
-                      lineHeight: '1.75',
-                      color: 'var(--text-1)',
-                      resize: 'vertical',
-                      minHeight: '180px',
-                      transition: 'border-color 180ms, box-shadow 180ms',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = 'var(--border-focus)';
-                      e.target.style.boxShadow = 'var(--shadow-glow)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'var(--border)';
-                      e.target.style.boxShadow = 'none';
-                    }}
+                    className="w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm leading-relaxed text-[var(--text-1)] resize-vertical min-h-[120px] md:min-h-[180px] transition-all outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--accent-subtle)]"
                   />
                 </div>
               </div>
 
-              <div style={{ marginTop: '24px' }}>
-                <label className="t-label" style={{ display: 'block', marginBottom: '10px' }}>
-                  Interview Questions: {questionCount}
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="30"
-                  value={questionCount}
-                  aria-label="Number of interview questions"
-                  aria-valuetext={`${questionCount} questions`}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value);
-                    if (val > 5) {
-                      setError("We limit questions and answers to 5 for now.");
-                      setQuestionCount(5);
-                    } else {
+              <div className="mt-5 md:mt-6">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="t-label">Interview Questions</label>
+                  <span className="text-lg md:text-xl font-semibold" style={{ color: 'var(--accent)' }}>{questionCount}</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    value={questionCount}
+                    aria-label="Number of interview questions"
+                    aria-valuetext={`${questionCount} questions`}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value);
                       setError(null);
                       setQuestionCount(val);
-                    }
-                  }}
-                  disabled={isLoading}
-                  style={{
-                    width: '100%',
-                    accentColor: 'var(--accent)'
-                  }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-                  <span className="t-caption">1</span>
-                  <span className="t-caption">30</span>
+                    }}
+                    disabled={isLoading}
+                    className="w-full"
+                    style={{
+                      background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((questionCount - 1) / 4) * 100}%, var(--surface-2) ${((questionCount - 1) / 4) * 100}%, var(--surface-2) 100%)`
+                    }}
+                  />
                 </div>
+                <div className="flex justify-between mt-1.5">
+                  <span className="t-caption">1</span>
+                  <span className="t-caption">5</span>
+                </div>
+                <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>Free tier limited to 5 questions</p>
               </div>
             </div>
 
             {error && (
-              <div style={{
-                padding: '20px 24px',
-                borderRadius: 'var(--radius-lg)',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                boxShadow: 'var(--shadow-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px'
-              }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: 'rgba(13,148,136,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}>
+              <div className="p-4 md:p-5 rounded-xl bg-white border border-[var(--border)] shadow-sm flex items-center gap-3 md:gap-4">
+                <div className="w-10 h-10 rounded-full bg-[rgba(13,148,136,0.1)] flex items-center justify-center flex-shrink-0">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ color: 'var(--accent)' }}>
                     <path d="M10 6V10M10 14H10.01M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: 500, color: 'var(--text-1)', lineHeight: 1.5 }}>
-                    {error}
-                  </p>
-                </div>
+                <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{error}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={isLoading}
-              style={{
-                background: 'var(--accent)',
-                color: '#fff',
-                borderRadius: 'var(--radius-md)',
-                height: '42px',
-                padding: '0 18px',
-                fontSize: '14px',
-                fontWeight: 500,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                border: 'none',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                transition: 'background 180ms, box-shadow 180ms, transform 180ms',
-                opacity: isLoading ? 0.7 : 1,
-                width: '100%'
-              }}
-              onMouseEnter={(e) => {
-                if (!isLoading) {
-                  e.currentTarget.style.background = 'var(--accent-hover)';
-                  e.currentTarget.style.boxShadow = '0 4px 16px var(--accent-glow)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--accent)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              className="bg-[var(--accent)] text-white rounded-xl h-11 md:h-12 px-5 text-sm font-medium flex items-center justify-center gap-2 border-none cursor-pointer transition-all w-full hover:bg-[var(--accent-hover)] hover:shadow-[0_4px_16px_var(--accent-glow)] hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
-                  <Loader2 style={{ width: '14px', height: '14px', animation: 'spin 1s linear infinite' }} />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   Analyzing your fit...
                 </>
               ) : (
                 <>
-                  <Sparkles style={{ width: '14px', height: '14px' }} />
+                  <Sparkles className="w-4 h-4" />
                   Generate Advice
                 </>
               )}
@@ -468,178 +367,205 @@ export default function CoachPage() {
         </main>
       </div>
 
+      {/* Toast */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 z-[200] transition-all duration-300 ease-out" style={{
+          animation: 'slideInUp 0.3s ease-out'
+        }}>
+          <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+            <Check className="w-3 h-3 text-white" strokeWidth={3} />
+          </div>
+          <span className="text-sm font-medium">Copied to clipboard</span>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
       {showModal && (
         <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            zIndex: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px'
-          }} 
-          onClick={() => setShowModal(false)}
+          className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 md:p-6"
+          onClick={() => !isLoading && setShowModal(false)}
         >
           <div 
             role="dialog" 
             aria-modal="true" 
             aria-labelledby="modal-title"
-            style={{
-              background: 'var(--surface)',
-              borderRadius: 'var(--radius-xl)',
-              maxWidth: '1200px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflow: 'auto',
-              position: 'relative'
-            }} 
+            className="bg-white rounded-2xl max-w-[1200px] w-full max-h-[90vh] overflow-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{
-              position: 'sticky',
-              top: 0,
-              background: 'var(--surface)',
-              borderBottom: '1px solid var(--border)',
-              padding: '20px 28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              zIndex: 10
-            }}>
-              <h2 id="modal-title" className="t-title" style={{ margin: 0 }}>Your Tailored Advice</h2>
+            <div className="sticky top-0 bg-white border-b border-[var(--border)] p-4 md:p-6 flex items-center justify-between z-10">
+              <h2 id="modal-title" className="t-title m-0">Your Tailored Advice</h2>
               <button
                 onClick={() => setShowModal(false)}
                 aria-label="Close dialog"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  borderRadius: 'var(--radius-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 180ms'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                className="bg-transparent border-none cursor-pointer p-2 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--surface-2)]"
               >
-                <X style={{ width: '20px', height: '20px', color: 'var(--text-2)' }} />
+                <X className="w-5 h-5" style={{ color: 'var(--text-2)' }} />
               </button>
             </div>
 
-            <div style={{ padding: '28px' }}>
-              {parsed ? (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
-                  <div style={{
-                    background: 'var(--surface-2)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '24px'
-                  }}>
-                    <div className="t-label" style={{ marginBottom: '16px' }}>Cover Letter Bullets</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="p-4 md:p-7">
+              {hasError ? (
+                <div className="flex flex-col items-center justify-center p-12 gap-4">
+                  <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">Something went wrong</h3>
+                  <p className="text-sm text-gray-600 text-center max-w-md">
+                    Please try again. If the problem persists, check your API key.
+                  </p>
+                  <button
+                    onClick={resetForm}
+                    className="mt-4 bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : isLoading ? (
+                <div className="grid grid-cols-1 gap-5 md:gap-6">
+                  {/* Skeleton for Cover Letter */}
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6 animate-pulse">
+                    <div className="h-4 bg-gray-300 rounded w-32 mb-4"></div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex gap-2.5 items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-2 flex-shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-gray-300 rounded w-full"></div>
+                          <div className="h-3 bg-gray-300 rounded w-5/6"></div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2.5 items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-2 flex-shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-gray-300 rounded w-full"></div>
+                          <div className="h-3 bg-gray-300 rounded w-4/6"></div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2.5 items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-2 flex-shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-gray-300 rounded w-full"></div>
+                          <div className="h-3 bg-gray-300 rounded w-3/4"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skeleton for Interview Prep */}
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6 animate-pulse">
+                    <div className="h-4 bg-gray-300 rounded w-28 mb-4"></div>
+                    <div className="flex flex-col gap-4">
+                      <div>
+                        <div className="h-3 bg-gray-300 rounded w-3/4 mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-full"></div>
+                        <div className="h-3 bg-gray-200 rounded w-5/6 mt-1"></div>
+                      </div>
+                      <div>
+                        <div className="h-3 bg-gray-300 rounded w-2/3 mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-full"></div>
+                        <div className="h-3 bg-gray-200 rounded w-4/6 mt-1"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skeleton for Fit Score */}
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6 flex flex-col items-center text-center animate-pulse">
+                    <div className="h-4 bg-gray-300 rounded w-20 mb-6"></div>
+                    <div className="h-16 w-24 bg-gray-300 rounded mb-4"></div>
+                    <div className="w-full h-1 rounded-full bg-gray-200 mb-4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                  </div>
+                </div>
+              ) : parsed ? (
+                <div className="grid grid-cols-1 gap-5 md:gap-6">
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6">
+                    <div className="t-label mb-4">Cover Letter Bullets</div>
+                    <div className="flex flex-col gap-3">
                       {parsed.coverLetterBullets.map((bullet, i) => (
-                        <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', marginTop: '8px', flexShrink: 0 }} />
-                          <span className="t-small">{bullet}</span>
+                        <div key={i} className="flex gap-2.5 items-start group">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-2 flex-shrink-0" />
+                          <span className="t-small flex-1">{bullet}</span>
+                          <button
+                            onClick={() => copyBullet(bullet, i)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white rounded"
+                            aria-label="Copy bullet"
+                          >
+                            {copiedBullet === i ? (
+                              <Check className="w-3.5 h-3.5 text-green-600" />
+                            ) : (
+                              <svg className="w-3.5 h-3.5" style={{ color: 'var(--text-3)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                            )}
+                          </button>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div style={{
-                    background: 'var(--surface-2)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '24px'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6">
+                    <div className="flex justify-between items-center mb-4">
                       <div className="t-label">Interview Prep</div>
                       <button
                         onClick={() => {
                           const allQA = displayedQA.map((qa, i) => `${i + 1}. Q: ${qa.question}\nA: ${qa.answer}`).join('\n\n');
                           copyToClipboard(allQA, -1);
                         }}
-                        style={{
-                          background: 'var(--accent)',
-                          color: '#fff',
-                          border: 'none',
-                          cursor: 'pointer',
-                          padding: '6px 12px',
-                          borderRadius: 'var(--radius-sm)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          fontSize: '12px',
-                          fontWeight: 500,
-                          transition: 'background 180ms'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--accent-hover)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'var(--accent)'}
+                        className="bg-[var(--accent)] text-white border-none cursor-pointer px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors hover:bg-[var(--accent-hover)]"
                       >
                         {copiedIndex === -1 ? (
-                          <><Check style={{ width: '12px', height: '12px' }} /> Copied</>
+                          <><Check className="w-3 h-3" /> Copied</>
                         ) : (
-                          <><Copy style={{ width: '12px', height: '12px' }} /> Copy All</>
+                          <><Copy className="w-3 h-3" /> Copy All</>
                         )}
                       </button>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div className="flex flex-col gap-4">
                       {displayedQA.map((qa, i) => (
                         <div key={i}>
-                          <p className="t-small" style={{ fontWeight: 600, color: 'var(--text-1)', marginBottom: '4px' }}>
+                          <p className="t-small font-semibold mb-1" style={{ color: 'var(--text-1)' }}>
                             {i + 1}. {qa.question}
                           </p>
-                          <p className="t-small" style={{ paddingLeft: '12px', borderLeft: '2px solid var(--border)' }}>
+                          <p className="t-small pl-3 border-l-2 border-[var(--border)]">
                             {qa.answer}
                           </p>
                         </div>
                       ))}
-                      {hasMoreQuestions && (
-                        <div style={{
-                          padding: '16px',
-                          borderRadius: 'var(--radius-md)',
-                          background: 'var(--accent-subtle)',
-                          border: '1px solid rgba(13,148,136,0.15)',
-                          textAlign: 'center'
-                        }}>
-                          <p className="t-small" style={{ color: 'var(--accent)', fontWeight: 500 }}>
-                            Free tier: 5 questions shown. Upgrade to see all {questionCount} questions.
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </div>
 
-                  <div style={{
-                    background: 'var(--surface-2)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '24px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center'
-                  }}>
-                    <div className="t-label" style={{ marginBottom: '24px' }}>Fit Score</div>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '16px' }}>
-                      <span style={{ fontSize: '64px', fontWeight: 650, color: 'var(--accent)', lineHeight: 1 }}>{parsed.fitScore}</span>
-                      <span style={{ fontSize: '22px', fontWeight: 400, color: 'var(--text-3)' }}>/10</span>
+                  <div className="bg-[var(--surface-2)] rounded-xl p-5 md:p-6 flex flex-col items-center text-center">
+                    <div className="t-label mb-6">Fit Score</div>
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="text-5xl md:text-6xl font-semibold leading-none" style={{ color: 'var(--accent)' }}>{parsed.fitScore}</span>
+                      <span className="text-xl md:text-2xl" style={{ color: 'var(--text-3)' }}>/10</span>
                     </div>
-                    <div style={{ width: '100%', height: '4px', borderRadius: 'var(--radius-pill)', background: 'var(--surface)', marginBottom: '16px', overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%',
-                        background: 'var(--accent)',
-                        width: `${parsed.fitScore * 10}%`,
-                        transition: 'width 900ms cubic-bezier(0.34,1.56,0.64,1)'
-                      }} />
+                    <div className="w-full h-1 rounded-full bg-white mb-4 overflow-hidden">
+                      <div 
+                        className="h-full bg-[var(--accent)] transition-all duration-700"
+                        style={{ width: `${parsed.fitScore * 10}%` }}
+                      />
                     </div>
                     <p className="t-small">{parsed.fitReasoning}</p>
                   </div>
                 </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px', gap: '12px' }}>
-                  <Loader2 style={{ width: '20px', height: '20px', animation: 'spin 1s linear infinite', color: 'var(--accent)' }} />
+                <div className="flex items-center justify-center p-12 gap-3">
+                  <Loader2 className="w-5 h-5 animate-spin" style={{ color: 'var(--accent)' }} />
                   <span className="t-body">Generating your advice...</span>
                 </div>
               )}
