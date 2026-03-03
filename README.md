@@ -18,9 +18,11 @@ Most job seekers send the same generic application to every job. AI Career Coach
 All streamed in real time — no waiting, no loading spinners.
 
 Screenshots
-<img width="1891" height="858" alt="Screenshot_9" src="https://github.com/user-attachments/assets/f23acb2c-7cdc-48e3-904c-d0c8bc887cf2" />
-<img width="1844" height="799" alt="one" src="https://github.com/user-attachments/assets/de9b4a52-62a7-404b-a1a0-047035158a30" />
-<img width="1620" height="839" alt="two" src="https://github.com/user-attachments/assets/0c3b639e-0fb7-4aef-a006-c88b20a33c6a" />
+<img width="1920" height="1932" alt="1" src="https://github.com/user-attachments/assets/ba991aec-692c-426a-9f88-6f77b8c57ded" />
+<img width="1920" height="1072" alt="2" src="https://github.com/user-attachments/assets/00c603c1-009e-490b-863e-9024fad5996c" />
+<img width="1920" height="1155" alt="3" src="https://github.com/user-attachments/assets/364dc05d-5f0e-4a1d-bfb7-a3e7f437e4b0" />
+
+
 LandingCoach (streaming)
 
 Tech Stack
