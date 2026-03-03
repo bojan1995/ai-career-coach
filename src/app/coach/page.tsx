@@ -40,7 +40,7 @@ function parseAdvice(text: string): ParsedAdvice {
       });
     } else if (title.includes('fit score')) {
       const scoreMatch = section.match(/\*\*Score:\*\*\s*(\d+)\/10/);
-      const reasoningMatch = section.match(/\*\*Reasoning:\*\*\s*(.+)/s);
+      const reasoningMatch = section.match(/\*\*Reasoning:\*\*\s*([\s\S]+)/);
       result.fitScore = scoreMatch ? parseInt(scoreMatch[1]) : 0;
       result.fitReasoning = reasoningMatch ? reasoningMatch[1].trim() : '';
     }
