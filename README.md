@@ -102,21 +102,7 @@ src/
 
 ---
 
-## How the streaming works
 
-```typescript
-// Server sends a ReadableStream directly from Groq
-const stream = await groq.chat.completions.create({
-  model: process.env.GROQ_MODEL ?? "llama3-70b-8192",
-  stream: true,
-  messages: [{ role: "user", content: prompt }],
-});
-
-// Client reads chunks as they arrive — no buffering
-for await (const chunk of stream) {
-  controller.enqueue(chunk.choices[0]?.delta?.content ?? "");
-}
-```
 
 ---
 
